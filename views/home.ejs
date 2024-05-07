@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PinClone Home</title>
+    <link rel="stylesheet" href="stylesheets/home.css" />
+  </head>
+  <style></style>
+  <body>
+    
+    <div class="header">
+      <div class="container">
+        <div class="logo">
+          <img src="images/pin_logo.png" alt="" />
+          <p>PinClone</p>
+        </div>
+        <div class="slogon">
+          <p>Discover Your Inspiration Where Ideas Come to Life.</p>
+        </div>
+        <div class="button">
+          <a class="login" href="/login">Log in</a>
+          <a class="signup" href="/register">Sign up</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-pins">
+      <div class="card">
+        <% posts.forEach((post)=>{ %>
+
+        <div class="image-container">
+          <img src="./posts/<%= post.image%>" alt="" />
+          <button class="download-btn">Download</button>
+          <div class="editor">
+            <h3><%= post.user.username%></h3>
+            <p><%= post.createdAt.toISOString().split('T')[0] %></p>
+          </div>
+        </div>
+
+        <% }) %>
+      </div>
+    </div>
+
+    <!-- <footer class="footer">
+      <p>© 2024 PinClone. All Rights Reserved.</p>
+    </footer> -->
+
+    <script>
+      document
+        .querySelector(".download-btn")
+        .addEventListener("click", function () {
+          const imageSrc = document.querySelector(".image-container img").src;
+          const link = document.createElement("a");
+          link.href = imageSrc;
+          link.download = "your-image.jpg";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        });
+    </script>
+  </body>
+</html>

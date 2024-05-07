@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <link rel="stylesheet" href="stylesheets/register.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="logo">
+        <img src="images/pin_logo.png" alt="" />
+        <p>PinClone</p>
+      </div>
+
+      <div class="page">
+        <h3>Register Now</h3>
+      </div>
+      <% if(error.length > 0){ %>
+        <p class="error"><%= error%></p>
+        <%}%>
+      <form action="/register" method="post">
+        <div class="main">
+          <div class="main-form">
+            <input
+              type="text"
+              name="name"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="Full Name"
+              required
+            />
+            <input
+              type="text"
+              name="username"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              placeholder="username"
+              required
+            />
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              id="exampleInputPassword1"
+              placeholder="Email"
+              required
+            />
+            <input
+            type="password"
+            name="password"
+            class="form-control"
+            id="exampleInputPassword1"
+            placeholder="Password"
+            required
+          />
+          </div>
+          <input type="submit" class="btn" value="Register" />
+        </div>
+      </form>
+
+      <div class="info">
+        <p>
+          By proceeding, you consent to abide by PinClone's
+          <strong>Terms of Service and Privacy Policy.</strong>
+        </p>
+      </div>
+      <a class="pre-reg" href="/login"
+        >Already a member? <strong>Log in</strong></a
+      >
+    </div>
+  </body>
+</html>

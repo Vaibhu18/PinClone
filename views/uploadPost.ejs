@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Post</title>
+    <link rel="stylesheet" href="stylesheets/uploadPost.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <img src="images/pin_logo.png" alt="" />
+        <p>PinClone</p>
+      </div>
+
+      <div class="page">
+        <h3>Let Your Pins Illuminate the World!</h3>
+      </div>
+
+      <form action="/uploadPost" method="post" enctype="multipart/form-data">
+        <div class="main">
+          <div class="main-form">
+            <input
+              type="file"
+              name="postImage"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+            />
+            <input
+              type="text"
+              name="imageTitle"
+              class="form-control"
+              id="exampleInputPassword1"
+              placeholder="Image Title"
+            />
+            <input
+              type="text"
+              name="description"
+              class="form-control"
+              id="exampleInputPassword1"
+              placeholder="Description"
+            />
+          </div>
+          <input type="submit" class="btn" value="Upload" />
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
