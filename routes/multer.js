@@ -1,15 +1,21 @@
 const multer = require("multer")
-const {v4:uuidv4} = require("uuid")
+const { v4: uuidv4 } = require("uuid")
 const path = require("path")
- 
+const fs = require('fs');
+
+const tempDir = path.join(__dirname, 'temp');
+if (!fs.existsSync(tempDir)) {
+  fs.mkdirSync(tempDir);
+}
+
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, "./public/profiles")
-    },
-    filename: function (req, file, cb) {
-      const uniqueId = uuidv4()
-      cb(null, uniqueId + path.extname(file.originalname))
-    }
-  })
-  
-  module.exports = multer({ storage: storage })
+  destination: function (req, file, cb) {
+    cb(null, "./public/profiles")
+  },
+  filename: function (req, file, cb) {
+    const uniqueId = uuidv4()
+    cb(null, uniqueId + path.extname(file.originalname))
+  }
+})
+
+module.exports = multer({ storage: storage })
