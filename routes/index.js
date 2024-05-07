@@ -4,8 +4,8 @@ const userModel = require("./users")
 const postModel = require("./postModel")
 const local = require("passport-local")
 const passport = require("passport")
-const upload = require("./multer")
-const uploadPosts = require("./multer_post")
+const upload = require("../public/multer")
+const uploadPosts = require("../public/multer_post")
 let error = [];
 
 passport.use(new local(userModel.authenticate()))

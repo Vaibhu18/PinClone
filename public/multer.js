@@ -3,16 +3,15 @@ const { v4: uuidv4 } = require("uuid")
 const path = require("path")
 const fs = require('fs');
 
-const tempDir = path.join(__dirname, 'temp');
-if (!fs.existsSync(tempDir)) {
-  fs.mkdirSync(tempDir);
+const profilesDir = path.join(__dirname, 'profiles');
+
+// Check if the directory exists, if not, create it
+if (!fs.existsSync(profilesDir)) {
+  fs.mkdirSync(profilesDir, { recursive: true }); 
 }
 
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-
-    cb(null, "./public/posts")
-  },
+  destination: profilesDir,
   filename: function (req, file, cb) {
     const uniqueId = uuidv4()
     cb(null, uniqueId + path.extname(file.originalname))
