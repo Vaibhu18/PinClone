@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
   username: String,
   email: String,
   password: String,
-  profileImage: String,
+  profileImage: String, 
   bords: {
     type: Array,
     default: []
