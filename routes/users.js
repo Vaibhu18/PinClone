@@ -3,11 +3,13 @@ var router = express.Router();
 const mongoose = require("mongoose")
 const plm = require("passport-local-mongoose")
 
-mongoose.connect("mongodb+srv://vaibhu8605:vaibhu@cluster0.qp1gqva.mongodb.net/PinClone").then(() => {
-  console.log("Mongodb is connected");
-}).catch((err) => {
-  console.log(err);
-})
+// mongoose.connect("mongodb+srv://vaibhu8605:vaibhu@cluster0.qp1gqva.mongodb.net/PinClone").then(() => {
+//   console.log("Mongodb is connected");
+// }).catch((err) => {
+//   console.log(err);
+// })
+
+mongoose.connect("mongodb://localhost:27017/PinClone")
 
 const userSchema = new mongoose.Schema({
   name: String,

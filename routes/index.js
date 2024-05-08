@@ -6,9 +6,17 @@ const local = require("passport-local")
 const passport = require("passport")
 const upload = require("./multer")
 const uploadPosts = require("./multer_post")
+const cloudinary = require('cloudinary').v2;
+const fs = require("fs")
 let error = [];
 
 passport.use(new local(userModel.authenticate()))
+
+cloudinary.config({
+  cloud_name: 'dadvvrncz',
+  api_key: '688672219212932',
+  api_secret: 'nNx1hfYWJW5P9T_7ddA33-PQ3n0'
+});
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
@@ -26,13 +34,24 @@ router.post('/uploadPost', isLoggedIn, uploadPosts.single("postImage"), async (r
   if (req.file == undefined) {
     res.redirect('/profile');
   } else {
+
+    const img = await cloudinary.uploader.upload(req.file.path, {
+      folder: "Posts"
+    });
     const user = await userModel.findOne({ username: req.session.passport.user })
     const post = await postModel.create({
       user: user._id,
       title: imageTitle,
       decription: description,
-      image: req.file.filename
+      image: img.secure_url
     })
+    fs.unlink(req.file.path, (err) => {
+      if (err) {
+        console.error('Error deleting file:', err);
+        return;
+      }
+      console.log('File deleted successfully');
+    });
     user.posts.push(post._id)
     await user.save()
     res.redirect('/profile');
@@ -53,9 +72,19 @@ router.get('/All/posts', isLoggedIn, async (req, res, next) => {
 
 
 router.post('/fileupload', isLoggedIn, upload.single("image"), async (req, res, next) => {
+  const img = await cloudinary.uploader.upload(req.file.path, {
+    folder: "Profile"
+  });
   const user = await userModel.findOne({ username: req.session.passport.user })
-  user.profileImage = req.file.filename
+  user.profileImage = img.secure_url
   await user.save();
+  fs.unlink(req.file.path, (err) => {
+    if (err) {
+      console.error('Error deleting file:', err);
+      return;
+    }
+    console.log('File deleted successfully');
+  });
   res.redirect("/profile")
 });
 
@@ -80,9 +109,32 @@ router.get('/edit/:id', async (req, res, next) => {
   }
   await user.save()
   await postModel.findOneAndDelete({ _id: postId })
+  const secureUrl = post.image;
+  deleteImageBySecureUrl(secureUrl);
+
+  function deleteImageBySecureUrl(secureUrl) {
+    const publicId = extractPublicIdFromSecureUrl(secureUrl);
+    if (!publicId) {
+      console.error('Unable to extract public ID from secure URL');
+      return;
+    }
+    cloudinary.uploader.destroy(publicId, (error, result) => {
+      if (error) {
+        console.error('Error deleting image:', error);
+      } else {
+        console.log('Image deleted successfully:', result);
+      }
+    });
+  }
   res.redirect("/profile")
 
 });
+
+function extractPublicIdFromSecureUrl(secureUrl) {
+  const regex = /\/v\d+\/([^\.]+)/;
+  const match = secureUrl.match(regex);
+  return match ? match[1] : null;
+}
 
 
 router.get("/login", function (req, res, next) {

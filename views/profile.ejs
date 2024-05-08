@@ -32,12 +32,12 @@
             <span id="uploadicon">
               <i class="fa-solid fa-pencil"></i>
             </span>
-            <img src="/profiles/<%= user.profileImage%>" alt="" />
+            <img src="<%= user.profileImage%>" alt="" />
           </div>
           <h3><%= user.name%></h3>
           <p>@<%= user.username%></p>
           <p>Posts : <%= user.posts.length %></p>
-  
+
           <div class="button">
             <a href="/logout" class="btn btn-danger"> Log Out</a>
             <a href="/uploadPost" class="btn new-post"> add new post</a>
@@ -50,7 +50,7 @@
           <% user.posts.forEach((post)=>{%>
           <div class="card">
             <div class="image-container">
-              <img src="posts/<%= post.image%>" alt="" />
+              <img src="<%= post.image%>" alt="" />
               <a class="download-btn" href="/edit/<%= post._id%>">delete</a>
               <div class="editor">
                 <h3><%= post.title%></h3>
