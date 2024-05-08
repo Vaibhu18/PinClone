@@ -21,7 +21,7 @@ cloudinary.config({
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
-  const posts = await postModel.find().populate("user").sort({ createdAt: 1 });;
+  const posts = await postModel.find().populate("user").sort({ createdAt: -1 });;
   res.render('home', { posts });
 });
 router.get('/uploadPost', function (req, res, next) {
