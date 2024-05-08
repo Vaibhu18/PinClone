@@ -31,7 +31,9 @@
 
         <div class="image-container">
           <img src="<%= post.image%>" alt="" />
-          <button class="download-btn">Download</button>
+          <b<a href="<%= post.image %>" download="image.jpg"
+            ><button class="download-btn">Download</button></a
+          >
           <div class="editor">
             <h3><%= post.user.username%></h3>
             <p><%= post.createdAt.toISOString().split('T')[0] %></p>
@@ -56,7 +58,13 @@
           link.download = "your-image.jpg";
           document.body.appendChild(link);
           link.click();
-          document.body.removeChild(link);
+
+          // Remove the link after the download is complete
+          link.addEventListener("click", function () {
+            setTimeout(function () {
+              document.body.removeChild(link);
+            }, 100);
+          });
         });
     </script>
   </body>
