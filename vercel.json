@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "app.js",
+      "src": "node ./bin/www",
       "use": "@vercel/node"
     }
   ],
@@ -11,10 +11,5 @@
       "src": "/(.*)",
       "dest": "app.js"
     }
-  ],
-  "functions": {
-    "api/*": {
-      "timeout": 30
-    }
-  }
+  ]
 }
