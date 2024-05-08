@@ -18,7 +18,7 @@
           <p>Explore the World Through Our Images!</p>
         </div>
         <div class="button">
-          <img src="/profiles/<%= user.profileImage%>" alt="" />
+          <img src="<%= user.profileImage%>" alt="" />
           <a class="login" href="/profile">Profile</a>
           <a class="signup" href="/logout">Logout</a>
         </div>
@@ -30,7 +30,7 @@
         <% posts.forEach((post)=>{ %>
 
         <div class="image-container">
-          <img src="/posts/<%= post.image%>" alt="" />
+          <img src="<%= post.image%>" alt="" />
           <button class="download-btn">Download</button>
           <div class="editor">
             <h3><%= post.user.username%></h3>

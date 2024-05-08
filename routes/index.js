@@ -1,16 +1,17 @@
 var express = require('express');
+const multer = require("multer")
 var router = express.Router();
 const userModel = require("./users")
 const postModel = require("./postModel")
 const local = require("passport-local")
 const passport = require("passport")
-const upload = require("./multer")
-const uploadPosts = require("./multer_post")
 const cloudinary = require('cloudinary').v2;
 const fs = require("fs")
 let error = [];
 
 passport.use(new local(userModel.authenticate()))
+
+const uploads = multer({ storage: multer.memoryStorage() }).single('image');
 
 cloudinary.config({
   cloud_name: 'dadvvrncz',
@@ -27,35 +28,31 @@ router.get('/uploadPost', function (req, res, next) {
   res.render('uploadPost');
 });
 
-router.post('/uploadPost', isLoggedIn, uploadPosts.single("postImage"), async (req, res, next) => {
+router.post('/uploadPost', isLoggedIn, uploads, async (req, res, next) => {
   let { imageTitle, description } = req.body;
   if (!imageTitle) imageTitle = " ";
   if (!description) description = " ";
-  if (req.file == undefined) {
-    res.redirect('/profile');
-  } else {
-
-    const img = await cloudinary.uploader.upload(req.file.path, {
-      folder: "Posts"
-    });
-    const user = await userModel.findOne({ username: req.session.passport.user })
-    const post = await postModel.create({
-      user: user._id,
-      title: imageTitle,
-      decription: description,
-      image: img.secure_url
-    })
-    fs.unlink(req.file.path, (err) => {
-      if (err) {
-        console.error('Error deleting file:', err);
-        return;
-      }
-      console.log('File deleted successfully');
-    });
-    user.posts.push(post._id)
-    await user.save()
-    res.redirect('/profile');
+  if (!req.file) {
+    res.status(400).send('No file selected');
+    return;
   }
+
+  await cloudinary.uploader.upload_stream({ resource_type: 'auto' }, async (error, result) => {
+    if (error) {
+      res.status(500).send('An error occurred during file upload');
+    } else {
+      const user = await userModel.findOne({ username: req.session.passport.user })
+      const post = await postModel.create({
+        user: user._id,
+        title: imageTitle,
+        decription: description,
+        image: result.secure_url
+      })
+      user.posts.push(post._id)
+      await user.save();
+    }
+  }).end(req.file.buffer);
+  res.redirect("/profile")
 });
 
 router.get('/profile', isLoggedIn, async (req, res, next) => {
@@ -70,23 +67,25 @@ router.get('/All/posts', isLoggedIn, async (req, res, next) => {
 });
 
 
-
-router.post('/fileupload', isLoggedIn, upload.single("image"), async (req, res, next) => {
-  const img = await cloudinary.uploader.upload(req.file.path, {
-    folder: "Profile"
-  });
-  const user = await userModel.findOne({ username: req.session.passport.user })
-  user.profileImage = img.secure_url
-  await user.save();
-  fs.unlink(req.file.path, (err) => {
-    if (err) {
-      console.error('Error deleting file:', err);
-      return;
+router.post('/fileupload', isLoggedIn, uploads, async (req, res, next) => {
+  if (!req.file) {
+    res.status(400).send('No file selected');
+    return;
+  }
+  await cloudinary.uploader.upload_stream({ resource_type: 'auto' }, async (error, result) => {
+    if (error) {
+      res.status(500).send('An error occurred during file upload');
+    } else {
+      const user = await userModel.findOne({ username: req.session.passport.user })
+      user.profileImage = result.secure_url
+      await user.save();
     }
-    console.log('File deleted successfully');
-  });
+  }).end(req.file.buffer);
   res.redirect("/profile")
 });
+
+
+
 
 router.get('/register', (req, res, next) => {
   res.render('register', { error });
